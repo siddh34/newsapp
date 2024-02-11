@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './newsItem'
+import Spinner from './spinner'
 
 export class News extends Component {
     constructor(){
@@ -41,6 +42,7 @@ export class News extends Component {
     async componentDidMount(){
         const url = process.env.REACT_APP_NEWS_API + `&page=1&pageSize=${this.props.pageSize}`;
         console.log(url);
+        this.setState({ loading: true });
         const data = await fetch(url);
         const parsedData = await data.json();
         const filteredData = parsedData.articles.filter((element) => {
@@ -55,6 +57,7 @@ export class News extends Component {
             <>
                 <h1 className='my-3 mx-3'>Top Headlines</h1>
                 <div className='Container my-3 mx-3'>
+                    {this.state.loading && <Spinner />}
                     <div className="row">
                         {this.state.article && this.state.article.map((element) => {
                             return <div className="col-md-3" key={element.url}>
