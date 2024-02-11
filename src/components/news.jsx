@@ -6,20 +6,40 @@ export class News extends Component {
         super();
         this.state = {
             article: this.article,
-            loading: false
+            loading: false,
+            page: 1
         }
     }
 
-    handelNext = () => {
-        console.log('Next');
+    handelPrev = async () => {
+        console.log('Prev');
+        const url = process.env.REACT_APP_NEWS_API + `&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+        this.setState({loading: true});
+        const data = await fetch(url);
+        const parsedData = await data.json();
+        const filteredData = parsedData.articles.filter((element) => {
+            return element.urlToImage != null;
+        });
+        console.log(filteredData);
+        this.setState({ article: filteredData, page: this.state.page - 1, loading: false, totalSize: parsedData.totalResults });
     }
 
-    handelPrev = () => {
-        console.log('Prev');
+    handelNext = async () => {
+        console.log('Next');
+        const url = process.env.REACT_APP_NEWS_API + `&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+        this.setState({loading: true});
+        const data = await fetch(url);
+        const parsedData = await data.json();
+        const filteredData = parsedData.articles.filter((element) => {
+            return element.urlToImage != null;
+        });
+        console.log(filteredData);
+        this.setState({ article: filteredData, page: this.state.page + 1, loading: false, totalSize: parsedData.totalResults });
     }
+
 
     async componentDidMount(){
-        const url = process.env.REACT_APP_NEWS_API;
+        const url = process.env.REACT_APP_NEWS_API + `&page=1&pageSize=${this.props.pageSize}`;
         console.log(url);
         const data = await fetch(url);
         const parsedData = await data.json();
@@ -27,7 +47,7 @@ export class News extends Component {
             return element.urlToImage != null;
         });
         console.log(filteredData);
-        this.setState({ article: filteredData});
+        this.setState({ article: filteredData, totalSize: parsedData.totalResults, loading: false});
     }   
 
     render() {
@@ -43,8 +63,8 @@ export class News extends Component {
                         })}
                     </div>
                     <div className="Container d-flex justify-content-between">
-                        <button type="button" className='btn btn-dark' onClick={this.handelPrev}>Previous</button>
-                        <button type="button" className='btn btn-dark' onClick={this.handelNext}>Next</button>
+                        <button disabled={this.state.page<=1} type="button" className='btn btn-dark' onClick={this.handelPrev}>Previous</button>
+                        <button disabled={this.state.page + 1 > Math.ceil(this.state.totalSize / this.props.pageSize)} type="button" className='btn btn-dark' onClick={this.handelNext}>Next</button>
                     </div>
                 </div>
             </>
