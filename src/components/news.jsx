@@ -12,9 +12,21 @@ export class News extends Component {
         }
     }
 
+    static defaultProps = {
+        pageSize: 8,
+        country: 'in',
+        category: 'general'
+    }
+
+    static propTypes = {
+        pageSize: 'number',
+        country: 'string',
+        category: 'string'
+    }
+
     handelPrev = async () => {
         console.log('Prev');
-        const url = process.env.REACT_APP_NEWS_API + `&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&category=${this.props.category}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
         this.setState({loading: true});
         const data = await fetch(url);
         const parsedData = await data.json();
@@ -27,7 +39,7 @@ export class News extends Component {
 
     handelNext = async () => {
         console.log('Next');
-        const url = process.env.REACT_APP_NEWS_API + `&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
         this.setState({loading: true});
         const data = await fetch(url);
         const parsedData = await data.json();
@@ -40,8 +52,7 @@ export class News extends Component {
 
 
     async componentDidMount(){
-        const url = process.env.REACT_APP_NEWS_API + `&page=1&pageSize=${this.props.pageSize}`;
-        console.log(url);
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&page=1&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true });
         const data = await fetch(url);
         const parsedData = await data.json();
