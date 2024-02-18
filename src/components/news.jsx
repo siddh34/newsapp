@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import NewsItem from './newsItem'
 import Spinner from './spinner'
+import PropTypes from 'prop-types';
 
 export class News extends Component {
     constructor(){
@@ -19,9 +20,9 @@ export class News extends Component {
     }
 
     static propTypes = {
-        pageSize: 'number',
-        country: 'string',
-        category: 'string'
+        pageSize: PropTypes.number,
+        country: PropTypes.string,
+        category: PropTypes.string
     }
 
     handelPrev = async () => {
@@ -85,5 +86,6 @@ export class News extends Component {
         )
     }
 }
+
 
 export default News
