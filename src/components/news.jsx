@@ -4,13 +4,14 @@ import Spinner from './spinner'
 import PropTypes from 'prop-types';
 
 export class News extends Component {
-    constructor(){
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             article: this.article,
             loading: false,
             page: 1
         }
+        document.title = `NewsMonkey - ${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)}`;
     }
 
     static defaultProps = {
@@ -25,7 +26,7 @@ export class News extends Component {
         category: PropTypes.string
     }
 
-    async updateNews(){
+    async updateNews() {
         const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&category=${this.props.category}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true });
         const data = await fetch(url);
@@ -38,17 +39,17 @@ export class News extends Component {
 
     handelPrev = async () => {
         await this.updateNews();
-        this.setState({ page: this.state.page - 1});
+        this.setState({ page: this.state.page - 1 });
     }
 
     handelNext = async () => {
         await this.updateNews();
-        this.setState({ page: this.state.page + 1});
+        this.setState({ page: this.state.page + 1 });
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
         await this.updateNews();
-    }   
+    }
 
     render() {
         return (
@@ -59,12 +60,12 @@ export class News extends Component {
                     <div className="row">
                         {this.state.article && this.state.article.map((element) => {
                             return <div className="col-md-3" key={element.url}>
-                                <NewsItem title={element.title ? element.title.slice(0, 60) : ""} desc={element.description ? element.description.slice(0, 90) : ""} imgurl={element.urlToImage} newsurl={element.url} author={element.author} date={element.publishedAt} source={element.source.name}/>
+                                <NewsItem title={element.title ? element.title.slice(0, 60) : ""} desc={element.description ? element.description.slice(0, 90) : ""} imgurl={element.urlToImage} newsurl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
                             </div>
                         })}
                     </div>
                     <div className="Container d-flex justify-content-between">
-                        <button disabled={this.state.page<=1} type="button" className='btn btn-dark' onClick={this.handelPrev}>Previous</button>
+                        <button disabled={this.state.page <= 1} type="button" className='btn btn-dark' onClick={this.handelPrev}>Previous</button>
                         <button disabled={this.state.page + 1 > Math.ceil(this.state.totalSize / this.props.pageSize)} type="button" className='btn btn-dark' onClick={this.handelNext}>Next</button>
                     </div>
                 </div>
