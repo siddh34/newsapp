@@ -25,43 +25,29 @@ export class News extends Component {
         category: PropTypes.string
     }
 
-    handelPrev = async () => {
-        console.log('Prev');
+    async updateNews(){
         const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&category=${this.props.category}&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-        this.setState({loading: true});
-        const data = await fetch(url);
-        const parsedData = await data.json();
-        const filteredData = parsedData.articles.filter((element) => {
-            return element.urlToImage != null;
-        });
-        console.log(filteredData);
-        this.setState({ article: filteredData, page: this.state.page - 1, loading: false, totalSize: parsedData.totalResults });
-    }
-
-    handelNext = async () => {
-        console.log('Next');
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
-        this.setState({loading: true});
-        const data = await fetch(url);
-        const parsedData = await data.json();
-        const filteredData = parsedData.articles.filter((element) => {
-            return element.urlToImage != null;
-        });
-        console.log(filteredData);
-        this.setState({ article: filteredData, page: this.state.page + 1, loading: false, totalSize: parsedData.totalResults });
-    }
-
-
-    async componentDidMount(){
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&page=1&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true });
         const data = await fetch(url);
         const parsedData = await data.json();
         const filteredData = parsedData.articles.filter((element) => {
             return element.urlToImage != null;
         });
-        console.log(filteredData);
-        this.setState({ article: filteredData, totalSize: parsedData.totalResults, loading: false});
+        this.setState({ article: filteredData, loading: false, totalSize: parsedData.totalResults });
+    }
+
+    handelPrev = async () => {
+        this.updateNews();
+        this.setState({ page: this.state.page - 1});
+    }
+
+    handelNext = async () => {
+        this.updateNews();
+        this.setState({ page: this.state.page + 1});
+    }
+
+    async componentDidMount(){
+        this.updateNews();
     }   
 
     render() {
