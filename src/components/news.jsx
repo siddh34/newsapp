@@ -37,17 +37,17 @@ export class News extends Component {
     }
 
     handelPrev = async () => {
-        this.updateNews();
+        await this.updateNews();
         this.setState({ page: this.state.page - 1});
     }
 
     handelNext = async () => {
-        this.updateNews();
+        await this.updateNews();
         this.setState({ page: this.state.page + 1});
     }
 
     async componentDidMount(){
-        this.updateNews();
+        await this.updateNews();
     }   
 
     render() {
