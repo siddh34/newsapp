@@ -30,19 +30,31 @@ export class News extends Component {
     }
 
     async updateNews() {
+        this.props.setProgress(10);
         const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&category=${this.props.category}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true });
+        
+        this.props.setProgress(30);
+        
         const data = await fetch(url);
+        
+        this.props.setProgress(50);
+        
         const parsedData = await data.json();
         const filteredData = parsedData.articles.filter((element) => {
             return element.urlToImage != null && !this.state.article.some(e => e.url === element.url);
         });
+
+        this.props.setProgress(70);
+
         this.setState(prevState => ({
             article: prevState.article.concat(filteredData),
             loading: false,
             totalResults: parsedData.totalResults,
             fetchedResults: filteredData.length
         }));
+
+        this.props.setProgress(100);
     }
 
     async componentDidMount() {

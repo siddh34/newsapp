@@ -20,12 +20,19 @@ export default class App extends Component {
             <>
                 <Router>
                     <Navbar />
-                    <LoadingBar color="#f11946" progress={10} />
+                    <LoadingBar
+                        color="#f11946"
+                        progress={this.state.progress}
+                    />
                     <Routes>
                         <Route
                             path="/"
                             element={
-                                <News key="general" pageSize={this.pageSize} />
+                                <News
+                                    setProgress={this.setProgress}
+                                    key="general"
+                                    pageSize={this.pageSize}
+                                />
                             }
                         />
 
