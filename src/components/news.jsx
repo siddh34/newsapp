@@ -29,6 +29,7 @@ const News = (props) => {
   };
 
   useEffect(() => {
+    document.title = `NewsMonkey - ${props.category.charAt(0).toUpperCase() + props.category.slice(1)}`;
     updateNews();
   }, []);
 
